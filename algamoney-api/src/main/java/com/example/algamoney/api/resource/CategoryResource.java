@@ -29,8 +29,9 @@ public class CategoryResource {
 	private CategoryRepository categoryRepository;
 	
 	@GetMapping
-	public List<Category> findAll() {
-		return categoryRepository.findAll();
+	public ResponseEntity<?> findAll() {
+		List<Category> category = categoryRepository.findAll(); 
+		return !category.isEmpty() ? ResponseEntity.ok(category) : ResponseEntity.notFound().build(); 
 	}
 	
 	@PostMapping
@@ -46,7 +47,9 @@ public class CategoryResource {
 	}
 	
 	@GetMapping("/{id}")
-	public Optional<Category> getById(@PathVariable Long id) {
-		return categoryRepository.findById(id);
-	}
+	public ResponseEntity<Category> getById(@PathVariable Long id) {
+		Optional<Category> category  = categoryRepository.findById(id);
+		return category.isPresent() ?
+				ResponseEntity.ok(category.get()) : ResponseEntity.notFound().build();
+	}	
 }
